@@ -15,4 +15,5 @@ public interface AccountingContextRepository {
     AccountingContext getById(String id);
     List<AccountingContext> getByName(String name);
     List<AccountNotFoundException> findByUserId(String userId);
+    void delete(String id);
 }
