@@ -11,6 +11,7 @@ public class User {
     @Id
     String id;
     String email;
+    String password;
     String firstName;
     String lastName;
     Enum role;
