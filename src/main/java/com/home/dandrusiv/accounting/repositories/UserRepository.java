@@ -14,5 +14,6 @@ public interface UserRepository {
     List<User> findByFirstName(String firstName);
     List<User> findByLastName(String lastName);
     List<User> findByRole(String role);
+    List<User> findAll();
     void delete(String userId);
 }

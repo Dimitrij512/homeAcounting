@@ -1,5 +1,7 @@
 package com.home.dandrusiv.accounting.repositories;
 
+import java.util.List;
+
 import com.home.dandrusiv.accounting.models.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +30,14 @@ public class UserRepositoryImplTest {
     }
 
     @Test
-    public void testUdateUser() {
+    public void testUpdateUser() {
         User createdUser = repository.create(prepareUser("test@email.com"));
         createdUser.setEmail("other@email.com");
 
         User updatedUser = repository.update(createdUser);
+        List<User> userList = repository.findAll();
 
+        assertThat(userList.size()).isEqualTo(1);
         assertThat(createdUser).isEqualTo(updatedUser);
     }
 
