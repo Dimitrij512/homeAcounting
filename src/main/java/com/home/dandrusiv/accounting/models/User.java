@@ -1,12 +1,11 @@
 package com.home.dandrusiv.accounting.models;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Component
+@Document
 public class User {
     @Id
     String id;

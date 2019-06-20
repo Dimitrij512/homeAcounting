@@ -1,12 +1,11 @@
 package com.home.dandrusiv.accounting.repositories;
 
+import com.home.dandrusiv.accounting.models.User;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
-import com.home.dandrusiv.accounting.models.User;
-
-@Repository
 public interface UserRepository {
     User create(User user);
     User update(User user);
