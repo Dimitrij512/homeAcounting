@@ -1,16 +1,15 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import com.home.dandrusiv.accounting.models.User;
-import com.mongodb.client.result.UpdateResult;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.home.dandrusiv.accounting.models.User;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -31,16 +30,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(final User user) {
-        final Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(user.getId()));
-
-        final UpdateResult updateResult = operations.updateFirst(query, updateUser(user), USER_DOCUMENT);
-
-        if(updateResult.wasAcknowledged()) {
-            return operations.findOne(query, User.class);
-        } else {
-            throw new RuntimeException("Error during updating user by id:" + user.getId());
-        }
+        return operations.save(user);
     }
 
     @Override
@@ -81,20 +71,13 @@ public class UserRepositoryImpl implements UserRepository {
         return operations.aggregate(agg, "user", User.class).getMappedResults();
     }
 
+    @Override public List<User> findAll() {
+        return operations.findAll(User.class);
+    }
+
     @Override
     public void delete(String userId) {
         operations.remove(Criteria.where("id").is(userId), USER_DOCUMENT);
     }
 
-    protected Update updateUser(User user) {
-        Update update = new Update();
-
-        update.set("email", user.getEmail());
-        update.set("firstName", user.getFirstName());
-        update.set("lastName", user.getLastName());
-        update.set("password", user.getPassword());
-        update.set("role", user.getRole());
-
-        return update;
-    }
 }
