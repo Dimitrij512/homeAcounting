@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
     private String USER_DOCUMENT = "user";
 
     @Override
-    public User create(User user) {
+    public User create(final User user) {
         return operations.insert(user, USER_DOCUMENT);
     }
 
@@ -33,7 +33,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getById(String id) {
+    public User getById(final String id) {
         final Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User getByEmail(final String email) {
         final Query query = new Query();
         query.addCriteria(Criteria.where("email").is(email));
 
@@ -49,24 +49,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findByFirstName(String firstName) {
-        Aggregation agg = newAggregation(match(Criteria.where("firstName").is(firstName)));
+    public List<User> findByFirstName(final String firstName) {
+        final Aggregation agg = newAggregation(match(Criteria.where("firstName").is(firstName)));
 
-        return operations.aggregate(agg, "user", User.class).getMappedResults();
+        return operations.aggregate(agg, USER_DOCUMENT, User.class).getMappedResults();
     }
 
     @Override
-    public List<User> findByLastName(String lastName) {
-        Aggregation agg = newAggregation(match(Criteria.where("lastName").is(lastName)));
+    public List<User> findByLastName(final String lastName) {
+        final Aggregation agg = newAggregation(match(Criteria.where("lastName").is(lastName)));
 
-        return operations.aggregate(agg, "user", User.class).getMappedResults();
+        return operations.aggregate(agg, USER_DOCUMENT, User.class).getMappedResults();
     }
 
     @Override
-    public List<User> findByRole(String role) {
-        Aggregation agg = newAggregation(match(Criteria.where("role").is(role)));
+    public List<User> findByRole(final String role) {
+        final Aggregation agg = newAggregation(match(Criteria.where("role").is(role)));
 
-        return operations.aggregate(agg, "user", User.class).getMappedResults();
+        return operations.aggregate(agg, USER_DOCUMENT, User.class).getMappedResults();
     }
 
     @Override
