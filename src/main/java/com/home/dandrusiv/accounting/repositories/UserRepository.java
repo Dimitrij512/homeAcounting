@@ -16,4 +16,5 @@ public interface UserRepository {
     List<User> findByRole(String role);
     List<User> findAll();
     void delete(String userId);
+    void deleteAll();
 }

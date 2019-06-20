@@ -22,7 +22,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     private String USER_DOCUMENT = "user";
 
-
     @Override
     public User create(User user) {
         return operations.insert(user, USER_DOCUMENT);
@@ -51,7 +50,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> findByFirstName(String firstName) {
-
         Aggregation agg = newAggregation(match(Criteria.where("firstName").is(firstName)));
 
         return operations.aggregate(agg, "user", User.class).getMappedResults();
@@ -71,13 +69,22 @@ public class UserRepositoryImpl implements UserRepository {
         return operations.aggregate(agg, "user", User.class).getMappedResults();
     }
 
-    @Override public List<User> findAll() {
+    @Override
+    public List<User> findAll() {
         return operations.findAll(User.class);
     }
 
     @Override
     public void delete(String userId) {
-        operations.remove(Criteria.where("id").is(userId), USER_DOCUMENT);
+        final Query query = new Query();
+        query.addCriteria(Criteria.where("id").is(userId));
+
+        operations.findAndRemove(query, User.class);
+    }
+
+    @Override
+    public void deleteAll() {
+        operations.dropCollection("user");
     }
 
 }
