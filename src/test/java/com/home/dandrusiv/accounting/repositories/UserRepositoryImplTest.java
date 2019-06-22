@@ -2,6 +2,7 @@ package com.home.dandrusiv.accounting.repositories;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +21,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserRepositoryImplTest {
 
     @Autowired
-    UserRepositoryImpl repository;
+    private UserRepository repository;
 
     private User preparedUser;
 
     @Before
     public void setup() {
-        repository.deleteAll();
         preparedUser = prepareUser("test@email.com", "TestName", "TestLastName");
+    }
+
+    @After
+    public void tearDown() {
+        repository.deleteAll();
     }
 
     @Test
@@ -96,8 +101,8 @@ public class UserRepositoryImplTest {
     private User prepareUser(String email, String name, String lastName) {
         User user = new User();
         user.setEmail(email);
-        user.setFirstName("Test");
-        user.setLastName("TestLastName");
+        user.setFirstName(name);
+        user.setLastName(lastName);
         user.setPassword("************");
 
         return user;

@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SubCategoryRepositoryImpl implements SubCategoryRepository {
 
@@ -16,7 +18,7 @@ public class SubCategoryRepositoryImpl implements SubCategoryRepository {
     private String SUB_CATEGORY_DOCUMENT = "subCategory";
 
     @Override
-    public SubCategory create(SubCategory subCategory) {
+    public SubCategory create(final SubCategory subCategory) {
         return operations.insert(subCategory, SUB_CATEGORY_DOCUMENT);
     }
 
@@ -26,7 +28,7 @@ public class SubCategoryRepositoryImpl implements SubCategoryRepository {
     }
 
     @Override
-    public SubCategory getById(String id) {
+    public SubCategory getById(final String id) {
         final Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
@@ -34,11 +36,19 @@ public class SubCategoryRepositoryImpl implements SubCategoryRepository {
     }
 
     @Override
-    public SubCategory findByName(String name) {
+    public SubCategory findByName(final String name) {
         final Query query = new Query();
         query.addCriteria(Criteria.where("name").is(name));
 
         return operations.findOne(query, SubCategory.class);
+    }
+
+    @Override
+    public List<SubCategory> findByCategoryId(final String categoryId) {
+        final Query query = new Query();
+        query.addCriteria(Criteria.where("idCategory").is(categoryId));
+
+        return operations.find(query, SubCategory.class);
     }
 
     @Override

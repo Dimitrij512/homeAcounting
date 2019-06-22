@@ -7,11 +7,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ItemRepositoryImpl implements ItemRepositrory{
 
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     private String ITEM_DOCUMENT = "item";
 
@@ -40,6 +42,14 @@ public class ItemRepositoryImpl implements ItemRepositrory{
         query.addCriteria(Criteria.where("name").is(name));
 
         return operations.findOne(query, Item.class);
+    }
+
+    @Override
+    public List<Item> findItemByCategoryId(String categoryId) {
+        final Query query = new Query();
+        query.addCriteria(Criteria.where("idCategory").is(categoryId));
+
+        return operations.find(query, Item.class);
     }
 
     @Override

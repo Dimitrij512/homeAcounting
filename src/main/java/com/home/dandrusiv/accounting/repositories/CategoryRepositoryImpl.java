@@ -8,11 +8,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CategoryRepositoryImpl implements CategoryRepositrory {
 
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     private String CATEGORY_DOCUMENT = "category";
 
@@ -32,6 +34,14 @@ public class CategoryRepositoryImpl implements CategoryRepositrory {
         query.addCriteria(Criteria.where("id").is(id));
 
         return operations.findOne(query, Category.class);
+    }
+
+    @Override
+    public List<Category> findCategoryByBalanceId(final String balanceId) {
+        final Query query = new Query();
+        query.addCriteria(Criteria.where("idBalance").is(balanceId));
+
+        return operations.find(query, Category.class);
     }
 
     @Override
