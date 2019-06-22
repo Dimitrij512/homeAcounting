@@ -11,6 +11,7 @@ import java.util.Date;
 public class Item {
     @Id
     String id;
+    String idCategory;
     String name;
     String value;
     Date date;

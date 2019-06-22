@@ -11,6 +11,7 @@ import java.util.List;
 public class SubCategory {
     @Id
     String id;
+    String idCategory;
     String name;
     List<Item> itemList;
     List<Category> categoryList;

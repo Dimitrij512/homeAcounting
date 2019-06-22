@@ -11,6 +11,7 @@ import java.util.List;
 public class Category {
     @Id
     String id;
+    String idBalance;
     String name;
     String budget;
     List<Item> itemList;
