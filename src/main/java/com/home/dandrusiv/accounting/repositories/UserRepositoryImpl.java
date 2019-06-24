@@ -1,20 +1,19 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import java.util.List;
-
+import com.home.dandrusiv.accounting.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-import com.home.dandrusiv.accounting.models.User;
+import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
-@Service
+@Repository
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
