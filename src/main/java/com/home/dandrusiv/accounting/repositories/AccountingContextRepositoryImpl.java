@@ -1,14 +1,19 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import com.home.dandrusiv.accounting.models.AccountingContext;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountNotFoundException;
-import java.util.List;
+import com.home.dandrusiv.accounting.models.AccountingContext;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 @Service
 public class AccountingContextRepositoryImpl implements AccountingContextRepository {
@@ -45,9 +50,17 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
     }
 
     @Override
-    public List<AccountNotFoundException> findByUserId(String userId) {
-        // TODO implement functionality
-        return null;
+    public List<AccountingContext> findAll() {
+        return operations.findAll(AccountingContext.class);
+    }
+
+    @Override
+    public List<AccountingContext> findByUserId(final String userId) {
+        Aggregation agg = newAggregation(match(Criteria.where("userIdList").is(userId)));
+
+        AggregationResults<AccountingContext> result = operations.aggregate(agg, ACCOUNTING_CONTEXT_DOCUMENT, AccountingContext.class);
+
+        return result.getMappedResults();
     }
 
     @Override
@@ -57,4 +70,5 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
 
         operations.findAndRemove(query, AccountingContext.class);
     }
+
 }

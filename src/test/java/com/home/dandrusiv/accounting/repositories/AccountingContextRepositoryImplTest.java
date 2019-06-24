@@ -1,26 +1,29 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.home.dandrusiv.accounting.models.AccountingContext;
-import com.home.dandrusiv.accounting.models.Category;
-import com.home.dandrusiv.accounting.models.Income;
-import com.home.dandrusiv.accounting.models.Outlay;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import com.home.dandrusiv.accounting.models.AccountingContext;
+import com.home.dandrusiv.accounting.models.Category;
+import com.home.dandrusiv.accounting.models.Income;
+import com.home.dandrusiv.accounting.models.Outlay;
+import com.home.dandrusiv.accounting.models.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -28,48 +31,111 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AccountingContextRepositoryImplTest {
 
     @Autowired
+    MongoOperations operations;
+
+    @Autowired
     private AccountingContextRepository repository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    AccountingContext accountingContext;
 
     @Before
     public void setUp() {
+        accountingContext = prepareAccountingContext();
     }
 
     @After
     public void tearDown() {
+        operations.dropCollection("accountingContext");
     }
 
     @Test
     public void create() {
-        AccountingContext accountingContext = prepareAccountingContext();
-        AccountingContext createdAx = repository.create(accountingContext);
+        AccountingContext createdAc = repository.create(accountingContext);
 
-        assertThat(createdAx).isNotNull();
-
-        printJson(createdAx);
-
-        assertThat(accountingContext).isEqualToIgnoringGivenFields(createdAx, "id");
-
-
+        assertThat(createdAc).isNotNull();
+        assertThat(accountingContext).isEqualToIgnoringGivenFields(createdAc, "id");
     }
 
     @Test
     public void update() {
+        AccountingContext createdAc = repository.create(accountingContext);
+        Income income = new Income();
+        createdAc.setIncome(income);
+
+        AccountingContext updatedAx = repository.update(accountingContext);
+
+        assertThat(updatedAx).isNotNull();
+        assertThat(createdAc).isEqualToIgnoringGivenFields(updatedAx, "id", "income");
+        assertThat(income).isEqualTo(updatedAx.getIncome());
     }
 
     @Test
     public void getById() {
+        AccountingContext createdAc = repository.create(accountingContext);
+        AccountingContext axById = repository.getById(createdAc.getId());
+
+        assertThat(createdAc).isEqualTo(axById);
     }
 
     @Test
     public void getByName() {
+        AccountingContext createdAc = repository.create(accountingContext);
+        AccountingContext axByName = repository.getByName(createdAc.getName());
+
+        assertThat(createdAc).isEqualTo(axByName);
     }
 
     @Test
     public void findByUserId() {
+        User testUser1 = userRepository.create(prepareUser("test@email.com", "Test1Name", "TestLast1Name"));
+        User testUser2 = userRepository.create(prepareUser("test@email.com", "Test2Name", "TestLast2Name"));
+        accountingContext.setUserIdList(Arrays.asList(testUser1.getId(), testUser2.getId()));
+
+        AccountingContext createdAx = repository.create(accountingContext);
+
+        List<AccountingContext> listAkByUserId1 = repository.findByUserId(testUser1.getId());
+        List<AccountingContext> listAkByUserId2 = repository.findByUserId(testUser2.getId());
+
+        assertThat(listAkByUserId1).isNotEmpty();
+        assertThat(listAkByUserId1).hasSize(1);
+        assertThat(listAkByUserId1.get(0)).isEqualTo(createdAx);
+        assertThat(listAkByUserId1).isEqualTo(listAkByUserId2);
+    }
+
+    @Test
+    public void findFewAcByUserId() {
+        User testUser1 = userRepository.create(prepareUser("test@email.com", "Test1Name", "TestLast1Name"));
+
+        accountingContext.setUserIdList(Collections.singletonList(testUser1.getId()));
+
+        //create two accounting context
+        AccountingContext createdAx1 = repository.create(accountingContext);
+        //changed id of accounting context
+        accountingContext.setId(UUID.randomUUID().toString());
+        AccountingContext createdAx2 = repository.create(accountingContext);
+
+        List<AccountingContext> listAkByUserId = repository.findByUserId(testUser1.getId());
+
+        assertThat(listAkByUserId).isNotEmpty();
+        assertThat(listAkByUserId).hasSize(2);
+        assertThat(listAkByUserId).contains(createdAx1, createdAx2);
     }
 
     @Test
     public void delete() {
+        AccountingContext ac = repository.create(prepareAccountingContext());
+        assertThat(ac).isNotNull();
+
+        AccountingContext acFindById = repository.getById(ac.getId());
+        assertThat(acFindById).isNotNull();
+        assertThat(ac).isEqualTo(acFindById);
+
+        repository.delete(acFindById.getId());
+
+        assertThat(repository.findAll()).isEmpty();
     }
 
     private AccountingContext prepareAccountingContext() {
@@ -86,7 +152,6 @@ public class AccountingContextRepositoryImplTest {
 
         accountingContext.setIncome(income);
         accountingContext.setOutlay(outlay);
-
 
         return accountingContext;
     }
@@ -121,8 +186,4 @@ public class AccountingContextRepositoryImplTest {
         return Arrays.asList(category, category2);
     }
 
-    private static void printJson(Object object) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(gson.toJson(object));
-    }
 }

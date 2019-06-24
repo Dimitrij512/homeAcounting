@@ -15,6 +15,8 @@ import com.home.dandrusiv.accounting.models.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext
@@ -96,16 +98,6 @@ public class UserRepositoryImplTest {
         List<User> userList = repository.findAll();
 
         assertThat(userList).isEmpty();
-    }
-
-    private User prepareUser(String email, String name, String lastName) {
-        User user = new User();
-        user.setEmail(email);
-        user.setFirstName(name);
-        user.setLastName(lastName);
-        user.setPassword("************");
-
-        return user;
     }
 
 }
