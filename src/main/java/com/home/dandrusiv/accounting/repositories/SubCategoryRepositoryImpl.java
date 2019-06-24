@@ -13,7 +13,7 @@ import java.util.List;
 public class SubCategoryRepositoryImpl implements SubCategoryRepository {
 
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     private String SUB_CATEGORY_DOCUMENT = "subCategory";
 

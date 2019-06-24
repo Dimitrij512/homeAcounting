@@ -18,7 +18,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 public class AccountingContextRepositoryImpl implements AccountingContextRepository {
 
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     private String ACCOUNTING_CONTEXT_DOCUMENT = "accountingContext";
 
@@ -57,7 +57,8 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
     public List<AccountingContext> findByUserId(final String userId) {
         Aggregation agg = newAggregation(match(Criteria.where("userIdList").is(userId)));
 
-        AggregationResults<AccountingContext> result = operations.aggregate(agg, ACCOUNTING_CONTEXT_DOCUMENT, AccountingContext.class);
+        AggregationResults<AccountingContext> result =
+                operations.aggregate(agg, ACCOUNTING_CONTEXT_DOCUMENT, AccountingContext.class);
 
         return result.getMappedResults();
     }

@@ -17,7 +17,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 public class UserRepositoryImpl implements UserRepository {
 
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     private String USER_DOCUMENT = "user";
 
