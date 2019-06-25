@@ -13,11 +13,11 @@ public class SubCategoryService {
     @Autowired
     private SubCategoryRepository repository;
 
-    public SubCategory createCategory(final SubCategory category) {
+    public SubCategory create(final SubCategory category) {
         return repository.create(category);
     }
 
-    public SubCategory updateCategory(final SubCategory category){
+    public SubCategory update(final SubCategory category){
         return repository.update(category);
     }
 

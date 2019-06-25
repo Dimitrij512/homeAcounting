@@ -13,11 +13,11 @@ public class AccountingContextService {
     @Autowired
     private AccountingContextRepositoryImpl repository;
 
-    public AccountingContext createCategory(final AccountingContext accountingContext) {
+    public AccountingContext create(final AccountingContext accountingContext) {
         return repository.create(accountingContext);
     }
 
-    public AccountingContext updateCategory(final AccountingContext accountingContext){
+    public AccountingContext update(final AccountingContext accountingContext){
         return repository.update(accountingContext);
     }
 
