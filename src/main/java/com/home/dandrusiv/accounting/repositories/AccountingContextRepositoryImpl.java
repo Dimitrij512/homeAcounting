@@ -1,6 +1,9 @@
 package com.home.dandrusiv.accounting.repositories;
 
 import com.home.dandrusiv.accounting.models.AccountingContext;
+import com.home.dandrusiv.accounting.models.Income;
+import com.home.dandrusiv.accounting.models.Outlay;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -24,7 +27,18 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
 
     @Override
     public AccountingContext create(final AccountingContext accountingContext) {
-        return operations.insert(accountingContext, ACCOUNTING_CONTEXT_DOCUMENT);
+        final AccountingContext ac = operations.insert(accountingContext, ACCOUNTING_CONTEXT_DOCUMENT);
+
+        Income income = new Income();
+        income.setAccountingContextId(ac.getId());
+
+        Outlay outlay = new Outlay();
+        outlay.setAccountingContextId(ac.getId());
+
+        operations.insert(income,"income");
+        operations.insert(outlay,"outlay");
+
+        return ac;
     }
 
     @Override
@@ -36,14 +50,6 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
     public AccountingContext getById(final String id) {
         final Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-
-        return operations.findOne(query, AccountingContext.class);
-    }
-
-    @Override
-    public AccountingContext getByName(final String name) {
-        final Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name));
 
         return operations.findOne(query, AccountingContext.class);
     }

@@ -37,17 +37,9 @@ public class ItemRepositoryImpl implements ItemRepositrory{
     }
 
     @Override
-    public Item findByName(final String name) {
-        final Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name));
-
-        return operations.findOne(query, Item.class);
-    }
-
-    @Override
     public List<Item> findItemByCategoryId(String categoryId) {
         final Query query = new Query();
-        query.addCriteria(Criteria.where("idCategory").is(categoryId));
+        query.addCriteria(Criteria.where("categoryId").is(categoryId));
 
         return operations.find(query, Item.class);
     }

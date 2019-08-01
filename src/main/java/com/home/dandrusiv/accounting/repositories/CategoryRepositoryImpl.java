@@ -39,17 +39,9 @@ public class CategoryRepositoryImpl implements CategoryRepositrory {
     @Override
     public List<Category> findCategoryByBalanceId(final String balanceId) {
         final Query query = new Query();
-        query.addCriteria(Criteria.where("idBalance").is(balanceId));
+        query.addCriteria(Criteria.where("balanceId").is(balanceId));
 
         return operations.find(query, Category.class);
-    }
-
-    @Override
-    public Category findByName(final String name) {
-        final Query query = new Query();
-        query.addCriteria(Criteria.where("name").is(name));
-
-        return operations.findOne(query, Category.class);
     }
 
     @Override

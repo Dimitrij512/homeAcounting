@@ -11,6 +11,5 @@ import java.util.List;
 public class Outlay {
     @Id
     String id;
-    String idAccountingContext;
-    List<Category> categoryList;
+    String accountingContextId;
 }
