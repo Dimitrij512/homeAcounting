@@ -1,6 +1,7 @@
 package com.home.dandrusiv.accounting.services;
 
 import com.home.dandrusiv.accounting.models.Category;
+import com.home.dandrusiv.accounting.repositories.CategoryRepository;
 import com.home.dandrusiv.accounting.repositories.CategoryRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.List;
 public class CategoryService {
 
     @Autowired
-    private CategoryRepositoryImpl repository;
+    private CategoryRepository repository;
 
     public Category create(final Category category) {
         return repository.create(category);

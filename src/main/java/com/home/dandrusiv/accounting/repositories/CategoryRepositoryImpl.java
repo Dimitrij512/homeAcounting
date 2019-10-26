@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class CategoryRepositoryImpl implements CategoryRepositrory {
+public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Autowired
     private MongoOperations operations;
@@ -59,4 +59,5 @@ public class CategoryRepositoryImpl implements CategoryRepositrory {
 
         operations.findAndRemove(query, Item.class);
     }
+
 }

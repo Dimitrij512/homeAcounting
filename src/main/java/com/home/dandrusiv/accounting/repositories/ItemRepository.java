@@ -4,7 +4,7 @@ import com.home.dandrusiv.accounting.models.Item;
 
 import java.util.List;
 
-public interface ItemRepositrory {
+public interface ItemRepository {
     Item create(Item item);
     Item update(Item item);
     Item getById(String id);

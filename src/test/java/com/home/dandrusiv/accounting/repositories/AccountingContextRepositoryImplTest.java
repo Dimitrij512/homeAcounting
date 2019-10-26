@@ -21,6 +21,7 @@ import com.home.dandrusiv.accounting.models.Income;
 import com.home.dandrusiv.accounting.models.Outlay;
 import com.home.dandrusiv.accounting.models.User;
 
+import static com.home.dandrusiv.accounting.util.TestUtil.printJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
@@ -64,6 +65,8 @@ public class AccountingContextRepositoryImplTest {
         AccountingContext createdAc = repository.create(accountingContext);
         Income income = new Income();
         createdAc.setIncome(income);
+
+        printJson(createdAc);
 
         AccountingContext updatedAx = repository.update(accountingContext);
 

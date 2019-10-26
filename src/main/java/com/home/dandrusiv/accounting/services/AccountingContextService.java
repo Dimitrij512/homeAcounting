@@ -1,7 +1,7 @@
 package com.home.dandrusiv.accounting.services;
 
 import com.home.dandrusiv.accounting.models.AccountingContext;
-import com.home.dandrusiv.accounting.repositories.AccountingContextRepositoryImpl;
+import com.home.dandrusiv.accounting.repositories.AccountingContextRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class AccountingContextService {
 
     @Autowired
-    private AccountingContextRepositoryImpl repository;
+    private AccountingContextRepository repository;
 
     public AccountingContext create(final AccountingContext accountingContext) {
         return repository.create(accountingContext);
