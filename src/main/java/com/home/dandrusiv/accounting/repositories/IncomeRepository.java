@@ -1,7 +1,9 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import com.home.dandrusiv.accounting.models.Income;
+import com.home.dandrusiv.accounting.models.Category;
 
 public interface IncomeRepository {
-    Income findByAcId(final String icId);
+
+    void addCategory(final Category category);
+    void removeCategory(final String id);
 }

@@ -4,7 +4,7 @@ import com.home.dandrusiv.accounting.models.Category;
 
 import java.util.List;
 
-public interface CategoryRepositrory {
+public interface CategoryRepository {
     Category create(Category category);
     Category update(Category category);
     Category getById(String id);

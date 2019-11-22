@@ -29,7 +29,6 @@ import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
 @SpringBootTest
 @DirtiesContext
 public class AccountingContextRepositoryImplTest {
-
     @Autowired
     MongoOperations operations;
 
@@ -68,11 +67,6 @@ public class AccountingContextRepositoryImplTest {
 
         assertThat(outlay).isNotNull();
         assertThat(outlay.getAccountingContextId()).isEqualTo(createdAc.getId());
-
-        Income income = incomeRepository.findByAcId(createdAc.getId());
-
-        assertThat(income).isNotNull();
-        assertThat(income.getAccountingContextId()).isEqualTo(createdAc.getId());
     }
 
     @Test

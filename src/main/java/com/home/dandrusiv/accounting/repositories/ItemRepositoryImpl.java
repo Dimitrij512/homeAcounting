@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ItemRepositoryImpl implements ItemRepositrory{
+public class ItemRepositoryImpl implements ItemRepository {
 
     @Autowired
     private MongoOperations operations;
@@ -51,4 +51,5 @@ public class ItemRepositoryImpl implements ItemRepositrory{
 
         operations.findAndRemove(query, Item.class);
     }
+
 }

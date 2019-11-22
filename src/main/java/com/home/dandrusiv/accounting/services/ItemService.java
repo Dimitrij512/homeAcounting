@@ -1,7 +1,7 @@
 package com.home.dandrusiv.accounting.services;
 
 import com.home.dandrusiv.accounting.models.Item;
-import com.home.dandrusiv.accounting.repositories.ItemRepositoryImpl;
+import com.home.dandrusiv.accounting.repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemService {
 
     @Autowired
-    private ItemRepositoryImpl repository;
+    private ItemRepository repository;
 
 
     public Item create(final Item item) {
