@@ -21,7 +21,6 @@ import com.home.dandrusiv.accounting.models.Income;
 import com.home.dandrusiv.accounting.models.Outlay;
 import com.home.dandrusiv.accounting.models.User;
 
-import static com.home.dandrusiv.accounting.util.TestUtil.printJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
@@ -30,7 +29,6 @@ import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
 @SpringBootTest
 @DirtiesContext
 public class AccountingContextRepositoryImplTest {
-
     @Autowired
     MongoOperations operations;
 
@@ -39,6 +37,12 @@ public class AccountingContextRepositoryImplTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private OutlayRepository outlayRepository;
+
+    @Autowired
+    private IncomeRepository incomeRepository;
 
     AccountingContext accountingContext;
 
@@ -58,21 +62,23 @@ public class AccountingContextRepositoryImplTest {
 
         assertThat(createdAc).isNotNull();
         assertThat(accountingContext).isEqualToIgnoringGivenFields(createdAc, "id");
+
+        Outlay outlay = outlayRepository.findByAcId(createdAc.getId());
+
+        assertThat(outlay).isNotNull();
+        assertThat(outlay.getAccountingContextId()).isEqualTo(createdAc.getId());
     }
 
     @Test
     public void update() {
         AccountingContext createdAc = repository.create(accountingContext);
-        Income income = new Income();
-        createdAc.setIncome(income);
+        createdAc.setName("UpdatedAccounting");
 
-        printJson(createdAc);
-
-        AccountingContext updatedAx = repository.update(accountingContext);
+        AccountingContext updatedAx = repository.update(createdAc);
 
         assertThat(updatedAx).isNotNull();
-        assertThat(createdAc).isEqualToIgnoringGivenFields(updatedAx, "id", "income");
-        assertThat(income).isEqualTo(updatedAx.getIncome());
+        assertThat(createdAc).isEqualToIgnoringGivenFields(updatedAx,  "name");
+        assertThat(createdAc).isNotEqualTo(updatedAx.getName());
     }
 
     @Test
@@ -81,14 +87,6 @@ public class AccountingContextRepositoryImplTest {
         AccountingContext axById = repository.getById(createdAc.getId());
 
         assertThat(createdAc).isEqualTo(axById);
-    }
-
-    @Test
-    public void getByName() {
-        AccountingContext createdAc = repository.create(accountingContext);
-        AccountingContext axByName = repository.getByName(createdAc.getName());
-
-        assertThat(createdAc).isEqualTo(axByName);
     }
 
     @Test
@@ -147,22 +145,13 @@ public class AccountingContextRepositoryImplTest {
         accountingContext.setId(UUID.randomUUID().toString());
         accountingContext.setName("My accounting");
 
-        Income income = prepareIncome(accountingContext.getId());
-        income.setCategoryList(prepareDefaultCategories(income.getId()));
-
-        Outlay outlay = prepareOutLay(accountingContext.getId());
-        outlay.setCategoryList(prepareDefaultCategories(outlay.getId()));
-
-        accountingContext.setIncome(income);
-        accountingContext.setOutlay(outlay);
-
         return accountingContext;
     }
 
     private Income prepareIncome(String accountingContextId) {
         Income income = new Income();
         income.setId(UUID.randomUUID().toString());
-        income.setIdAccountingContext(accountingContextId);
+        income.setAccountingContextId(accountingContextId);
 
         return income;
     }
@@ -170,7 +159,7 @@ public class AccountingContextRepositoryImplTest {
     private Outlay prepareOutLay(String accountingContextId) {
         Outlay outlay = new Outlay();
         outlay.setId(UUID.randomUUID().toString());
-        outlay.setIdAccountingContext(accountingContextId);
+        outlay.setAccountingContextId(accountingContextId);
 
         return outlay;
     }
@@ -178,12 +167,12 @@ public class AccountingContextRepositoryImplTest {
     private List<Category> prepareDefaultCategories(String id) {
         Category category = new Category();
         category.setId(UUID.randomUUID().toString());
-        category.setIdBalance(id);
+        category.setBalanceId(id);
         category.setName("FirstCategory");
 
         Category category2 = new Category();
         category2.setId(UUID.randomUUID().toString());
-        category2.setIdBalance(id);
+        category2.setBalanceId(id);
         category2.setName("SecondCategory");
 
         return Arrays.asList(category, category2);

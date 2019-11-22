@@ -48,12 +48,6 @@ public class SubCategoryController {
         return service.findByCategoryId(id);
     }
 
-    @GetMapping("/name/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public SubCategory findByName(@PathVariable final String name) {
-        return service.findByName(name);
-    }
-
     @DeleteMapping("/id/{id}")
     public void delete(@PathVariable final String id) {
         service.delete(id);

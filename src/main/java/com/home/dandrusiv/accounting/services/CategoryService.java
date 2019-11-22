@@ -26,10 +26,6 @@ public class CategoryService {
         return repository.getById(id);
     }
 
-    public Category findByName(String name) {
-        return repository.findByName(name);
-    }
-
     public List<Category> findCategoryByBalanceId(final String id) {
         return repository.findCategoryByBalanceId(id);
     }

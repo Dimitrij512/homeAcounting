@@ -25,10 +25,6 @@ public class SubCategoryService {
         return repository.getById(id);
     }
 
-    public SubCategory findByName(String name) {
-        return repository.findByName(name);
-    }
-
     public List<SubCategory> findByCategoryId(final String id) {
         return repository.findByCategoryId(id);
     }

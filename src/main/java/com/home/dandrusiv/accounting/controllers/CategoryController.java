@@ -48,12 +48,6 @@ public class CategoryController {
         return service.findCategoryByBalanceId(id);
     }
 
-    @GetMapping("/name/{name}")
-    @ResponseStatus(HttpStatus.OK)
-    public Category findByName(@PathVariable final String name) {
-        return service.findByName(name);
-    }
-
     @DeleteMapping("/id/{id}")
     public void delete(@PathVariable final String id) {
         service.delete(id);
