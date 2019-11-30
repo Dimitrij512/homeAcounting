@@ -1,11 +1,6 @@
 package com.home.dandrusiv.accounting.repositories;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
+import com.home.dandrusiv.accounting.models.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,17 +11,12 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.home.dandrusiv.accounting.models.AccountingContext;
-import com.home.dandrusiv.accounting.models.Category;
-import com.home.dandrusiv.accounting.models.Income;
-import com.home.dandrusiv.accounting.models.Item;
-import com.home.dandrusiv.accounting.models.Outlay;
-import com.home.dandrusiv.accounting.models.SubCategory;
-import com.home.dandrusiv.accounting.models.User;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -109,8 +99,13 @@ public class AccountingContextRepositoryImplTest {
         itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Хліб", 252500.50));
         itemRepository.create(prepareItem(secondOutlayCategory.getId(), "Ще щось", 3500.25));
 
+
+        Date startDate = new Date(2010, 3, 1);
+        Date endDate = new Date(2019, 4, 1);
+
         double sum = 25500 + 23500.50 + 252500.50;
-        double sumCalculated = calculatorRepository.calculateSumByCategoryId(firstOutlayCategory.getId());
+        double sumCalculated = calculatorRepository.calculateSumByCategoryId(firstOutlayCategory.getId(),
+                startDate, endDate);
 
         assertThat(sumCalculated).isEqualTo(sum);
     }
@@ -127,7 +122,7 @@ public class AccountingContextRepositoryImplTest {
     private static Item prepareItem(String categoryId, String name, double value) {
         Item item = new Item();
         item.setId(UUID.randomUUID().toString());
-        item.setDate(new Date());
+        item.setDate(new Date(2018, 3, 1));
         item.setCategoryId(categoryId);
         item.setName(name);
         item.setValue(value);
