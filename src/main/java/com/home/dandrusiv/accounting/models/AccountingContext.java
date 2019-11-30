@@ -12,5 +12,7 @@ public class AccountingContext {
     @Id
     String id;
     String name;
+    Outlay outlay;
+    Income income;
     List<String> userIdList;
 }

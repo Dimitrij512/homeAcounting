@@ -13,6 +13,6 @@ public class Item {
     String id;
     String categoryId;
     String name;
-    String value;
+    double value;
     Date date;
 }

@@ -2,6 +2,7 @@ package com.home.dandrusiv.accounting.repositories;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.home.dandrusiv.accounting.models.AccountingContext;
 import com.home.dandrusiv.accounting.models.Category;
 import com.home.dandrusiv.accounting.models.Income;
+import com.home.dandrusiv.accounting.models.Item;
 import com.home.dandrusiv.accounting.models.Outlay;
+import com.home.dandrusiv.accounting.models.SubCategory;
 import com.home.dandrusiv.accounting.models.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,9 +45,18 @@ public class AccountingContextRepositoryImplTest {
     private OutlayRepository outlayRepository;
 
     @Autowired
-    private IncomeRepository incomeRepository;
+    private CategoryRepository categoryRepository;
 
-    AccountingContext accountingContext;
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
+
+    @Autowired
+    private CalculatorRepository calculatorRepository;
+
+    private AccountingContext accountingContext;
 
     @Before
     public void setUp() {
@@ -54,6 +66,73 @@ public class AccountingContextRepositoryImplTest {
     @After
     public void tearDown() {
         operations.dropCollection("accountingContext");
+    }
+
+    @Test
+    public void testLogic() {
+        // create user
+        User user = userRepository.create(prepareUser("dmytor.andrisiv@gmail.com", "Dmytro", "Andrusiv"));
+        // update accounting context
+        accountingContext.setUserIdList(Collections.singletonList(user.getId()));
+        accountingContext.setIncome(prepareIncome(accountingContext.getId()));
+        accountingContext.setOutlay(prepareOutLay(accountingContext.getId()));
+        // create accounting context
+        AccountingContext createdAc = repository.create(accountingContext);
+
+        final List<Category> incomeCategories = prepareDefaultCategories(createdAc.getIncome().getId());
+        final List<Category> outLayCategories = prepareDefaultCategories(createdAc.getOutlay().getId());
+
+        Category firstIncomeCategory = incomeCategories.get(0);
+        Category secondIncomeCategory = incomeCategories.get(1);
+        Category firstOutlayCategory = outLayCategories.get(0);
+        Category secondOutlayCategory = outLayCategories.get(1);
+
+        // create categories
+        categoryRepository.create(firstIncomeCategory);
+        categoryRepository.create(secondIncomeCategory);
+        categoryRepository.create(firstOutlayCategory);
+        categoryRepository.create(secondOutlayCategory);
+
+        // crate subcategories
+        SubCategory firstSubCategory =  prepareSubcategory(firstIncomeCategory.getId(), "One payment");
+        SubCategory secondSubCategory =  prepareSubcategory(firstOutlayCategory.getId(), "Ще одна підкатегорія");
+
+        subCategoryRepository.create(firstSubCategory);
+        subCategoryRepository.create(secondSubCategory);
+
+        // create items for categories
+        itemRepository.create(prepareItem(firstIncomeCategory.getId(), "Зарплата", 1500));
+        itemRepository.create(prepareItem(secondIncomeCategory.getId(), "Аванс", 5500));
+
+        itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Овочі", 25500));
+        itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Фрукти", 23500.50));
+        itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Хліб", 252500.50));
+        itemRepository.create(prepareItem(secondOutlayCategory.getId(), "Ще щось", 3500.25));
+
+        double sum = 25500 + 23500.50 + 252500.50;
+        double sumCalculated = calculatorRepository.calculateSumByCategoryId(firstOutlayCategory.getId());
+
+        assertThat(sumCalculated).isEqualTo(sum);
+    }
+
+    private static SubCategory prepareSubcategory(String categoryId, String name) {
+        SubCategory subCategory = new SubCategory();
+        subCategory.setId(UUID.randomUUID().toString());
+        subCategory.setCategoryId(categoryId);
+        subCategory.setName(name);
+
+        return subCategory;
+    }
+
+    private static Item prepareItem(String categoryId, String name, double value) {
+        Item item = new Item();
+        item.setId(UUID.randomUUID().toString());
+        item.setDate(new Date());
+        item.setCategoryId(categoryId);
+        item.setName(name);
+        item.setValue(value);
+
+        return item;
     }
 
     @Test
