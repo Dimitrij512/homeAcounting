@@ -4,6 +4,6 @@ import com.home.dandrusiv.accounting.models.Category;
 
 public interface IncomeRepository {
 
-    void addCategory(final Category category);
-    void removeCategory(final String id);
+/*    void addCategory(final Category category);
+    void removeCategory(final String id);*/
 }
