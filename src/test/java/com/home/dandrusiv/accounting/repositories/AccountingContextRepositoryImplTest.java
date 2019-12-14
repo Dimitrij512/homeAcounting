@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext
 public class AccountingContextRepositoryImplTest {
     @Autowired
-    MongoOperations operations;
+    private MongoOperations operations;
 
     @Autowired
     private AccountingContextRepository repository;
@@ -85,10 +85,10 @@ public class AccountingContextRepositoryImplTest {
 
         // crate subcategories
         SubCategory firstSubCategory =  prepareSubcategory(firstIncomeCategory.getId(), "One payment");
-        SubCategory secondSubCategory =  prepareSubcategory(firstOutlayCategory.getId(), "Ще одна підкатегорія");
+        SubCategory firstOutlaySubCategory =  prepareSubcategory(firstOutlayCategory.getId(), "Ще одна підкатегорія");
 
         subCategoryRepository.create(firstSubCategory);
-        subCategoryRepository.create(secondSubCategory);
+        subCategoryRepository.create(firstOutlaySubCategory);
 
         // create items for categories
         itemRepository.create(prepareItem(firstIncomeCategory.getId(), "Зарплата", 1500));
@@ -97,14 +97,17 @@ public class AccountingContextRepositoryImplTest {
         itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Овочі", 25500));
         itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Фрукти", 23500.50));
         itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Хліб", 252500.50));
+        itemRepository.create(prepareItem(firstOutlaySubCategory.getId(), "Собака", 33.3));
+
+
         itemRepository.create(prepareItem(secondOutlayCategory.getId(), "Ще щось", 3500.25));
 
 
         Date startDate = new Date(2010, 3, 1);
         Date endDate = new Date(2019, 4, 1);
 
-        double sum = 25500 + 23500.50 + 252500.50;
-        double sumCalculated = calculatorRepository.calculateSumByCategoryId(firstOutlayCategory.getId(),
+        double sum = 25500 + 23500.50 + 252500.50 + 33.3;
+        double sumCalculated = calculatorRepository.getSumByCategory(firstOutlayCategory.getId(),
                 startDate, endDate);
 
         assertThat(sumCalculated).isEqualTo(sum);

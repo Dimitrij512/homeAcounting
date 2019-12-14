@@ -1,5 +1,7 @@
 package com.home.dandrusiv.accounting.repositories;
 
+import java.util.Date;
+
 public interface CalculatorRepository {
-    double calculateSumByCategoryId(final String categoryId);
+    double getSumByCategory(final String categoryId, Date startDate, Date endDate);
 }
