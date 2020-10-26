@@ -107,8 +107,7 @@ public class AccountingContextRepositoryImplTest {
         Date endDate = new Date(2019, 4, 1);
 
         double sum = 25500 + 23500.50 + 252500.50 + 33.3;
-        double sumCalculated = calculatorRepository.getSumByCategory(firstOutlayCategory.getId(),
-                startDate, endDate);
+        double sumCalculated = calculatorRepository.getSumByCategory(firstOutlayCategory.getId(), startDate, endDate);
 
         assertThat(sumCalculated).isEqualTo(sum);
     }
