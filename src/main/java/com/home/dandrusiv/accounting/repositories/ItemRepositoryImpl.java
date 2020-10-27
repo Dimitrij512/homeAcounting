@@ -19,18 +19,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 
 
     @Override
-    public Item create(final Item item) {
+    public Item create(Item item) {
         return operations.insert(item, ITEM_DOCUMENT);
     }
 
     @Override
-    public Item update(final Item item) {
+    public Item update(Item item) {
         return operations.save(item);
     }
 
     @Override
-    public Item getById(final String id) {
-        final Query query = new Query();
+    public Item getById(String id) {
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
         return operations.findOne(query, Item.class);
@@ -38,15 +38,15 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findItemByCategoryId(String categoryId) {
-        final Query query = new Query();
+        Query query = new Query();
         query.addCriteria(Criteria.where("categoryId").is(categoryId));
 
         return operations.find(query, Item.class);
     }
 
     @Override
-    public void delete(final String id) {
-        final Query query = new Query();
+    public void delete(String id) {
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
         operations.findAndRemove(query, Item.class);

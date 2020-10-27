@@ -3,5 +3,6 @@ package com.home.dandrusiv.accounting.repositories;
 import java.util.Date;
 
 public interface CalculatorRepository {
-    double getSumByCategory(final String categoryId, Date startDate, Date endDate);
+
+    double getSumByCategory(String categoryId, Date startDate, Date endDate);
 }

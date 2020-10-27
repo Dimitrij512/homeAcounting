@@ -18,8 +18,12 @@ public class CalculatorRepositoryImpl implements CalculatorRepository {
     private final String ITEM_DOCUMENT = "item";
     private final String SUB_CATEGORY_DOCUMENT = "subCategory";
 
-    @Autowired
     private MongoOperations operations;
+
+    @Autowired
+    public CalculatorRepositoryImpl(MongoOperations operations){
+        this.operations = operations;
+    }
 
     @Override
     public double getSumByCategory(String categoryId, Date startDate, Date endDate) {
@@ -32,7 +36,7 @@ public class CalculatorRepositoryImpl implements CalculatorRepository {
         return sumByCategory + sumByAllSubCategory;
     }
 
-    private double calculateSumByCategoryId(final String categoryId, Date startDate, Date endDate) {
+    private double calculateSumByCategoryId(String categoryId, Date startDate, Date endDate) {
 
         Aggregation agg = newAggregation(
                 match(Criteria.where("categoryId")
