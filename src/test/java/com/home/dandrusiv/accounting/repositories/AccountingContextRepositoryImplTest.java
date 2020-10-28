@@ -103,8 +103,10 @@ public class AccountingContextRepositoryImplTest {
         itemRepository.create(prepareItem(secondOutlayCategory.getId(), "Ще щось", 3500.25));
 
 
+
         Date startDate = new Date(2010, 3, 1);
         Date endDate = new Date(2019, 4, 1);
+        final List<Item> itemsByDate = itemRepository.findItemsByDate(startDate, endDate);
 
         double sum = 25500 + 23500.50 + 252500.50 + 33.3;
         double sumCalculated = calculatorRepository.getSumByCategory(firstOutlayCategory.getId(), startDate, endDate);

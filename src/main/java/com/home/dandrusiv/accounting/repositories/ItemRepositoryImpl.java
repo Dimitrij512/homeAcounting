@@ -7,13 +7,19 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
 
-    @Autowired
     private MongoOperations operations;
+
+    @Autowired
+    public ItemRepositoryImpl(MongoOperations operations) {
+
+        this.operations = operations;
+    }
 
     private String ITEM_DOCUMENT = "item";
 
@@ -40,6 +46,17 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<Item> findItemByCategoryId(String categoryId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("categoryId").is(categoryId));
+
+        return operations.find(query, Item.class);
+    }
+
+    @Override
+    public List<Item> findItemsByDate(Date startDate, Date endDate) {
+        Query query = new Query();
+        Criteria.where("id").exists(true)
+                .and("date")
+                .gte(startDate)
+                .lte(endDate);
 
         return operations.find(query, Item.class);
     }

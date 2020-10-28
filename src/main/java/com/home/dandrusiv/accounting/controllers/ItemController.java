@@ -21,35 +21,45 @@ import com.home.dandrusiv.accounting.services.ItemService;
 @RequestMapping("item")
 public class ItemController {
 
+    private final ItemService service;
+
     @Autowired
-    private ItemService service;
+    public ItemController(ItemService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Item create(@RequestBody final Item items) {
+    public Item create(@RequestBody Item items) {
         return service.create(items);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Item update(@RequestBody final Item items) {
+    public Item update(@RequestBody Item items) {
         return service.update(items);
     }
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Item getById(@PathVariable final String id) {
+    public Item getById(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping("/categoryId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Item> getByCategoryId(@PathVariable final String id) {
+    public List<Item> getByCategoryId(@PathVariable String id) {
         return service.findItemsByCategoryId(id);
     }
 
+    @GetMapping("/start/{epochStartDate}/end/{epochEndDate}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Item> getByDate(@PathVariable long epochStartDate, @PathVariable long epochEndDate) {
+        return service.findItemsByDate (epochStartDate, epochEndDate);
+    }
+
     @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable final String id) {
+    public void delete(@PathVariable String id) {
         service.delete(id);
     }
 
