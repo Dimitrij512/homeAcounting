@@ -30,8 +30,8 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Item create(@RequestBody Item items) {
-        return service.create(items);
+    public Item create(@RequestBody Item item) {
+        return service.create(item);
     }
 
     @PutMapping
