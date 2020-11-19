@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.home.dandrusiv.accounting.models.Item;
 import com.home.dandrusiv.accounting.services.ItemService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("item")
 public class ItemController {
 
@@ -43,7 +45,11 @@ public class ItemController {
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Item getById(@PathVariable String id) {
-        return service.getById(id);
+
+        System.out.println("get item by id");
+        Item byId = service.getById(id);
+        System.out.println("Item" + byId.toString());
+        return byId;
     }
 
     @GetMapping("/categoryId/{id}")
