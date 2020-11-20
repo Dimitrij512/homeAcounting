@@ -28,30 +28,30 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Category create(@RequestBody final Category category) {
+    public Category create(@RequestBody Category category) {
         return service.create(category);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Category update(@RequestBody final Category category) {
+    public Category update(@RequestBody Category category) {
         return service.update(category);
     }
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Category getById(@PathVariable final String id) {
+    public Category getById(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping("/balanceId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Category> findCategoryByBalanceId(@PathVariable final String id) {
+    public List<Category> findCategoryByBalanceId(@PathVariable String id) {
         return service.findCategoryByBalanceId(id);
     }
 
     @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable final String id) {
+    public void delete(@PathVariable String id) {
         service.delete(id);
     }
 

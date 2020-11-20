@@ -28,30 +28,30 @@ public class SubCategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SubCategory create(@RequestBody final SubCategory subCategory) {
+    public SubCategory create(@RequestBody SubCategory subCategory) {
         return service.create(subCategory);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public SubCategory update(@RequestBody final SubCategory subCategory) {
+    public SubCategory update(@RequestBody SubCategory subCategory) {
         return service.update(subCategory);
     }
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public SubCategory getById(@PathVariable final String id) {
+    public SubCategory getById(@PathVariable String id) {
         return service.getById(id);
     }
 
     @GetMapping("/categoryId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<SubCategory> findByCategoryId(@PathVariable final String id) {
+    public List<SubCategory> findByCategoryId(@PathVariable String id) {
         return service.findByCategoryId(id);
     }
 
     @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable final String id) {
+    public void delete(@PathVariable String id) {
         service.delete(id);
     }
 
