@@ -14,5 +14,6 @@ public class Item {
     String categoryId;
     String name;
     double value;
+    String comment;
     Date date;
 }
