@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
 
-    private MongoOperations operations;
+    private final MongoOperations operations;
 
     @Autowired
     public ItemRepositoryImpl(MongoOperations operations) {
@@ -43,7 +43,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> findItemByCategoryId(String categoryId) {
+    public List<Item> findItemsByCategoryId(String categoryId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("categoryId").is(categoryId));
 
@@ -54,6 +54,19 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<Item> findItemsByDate(Date startDate, Date endDate) {
         Query query = new Query();
         Criteria.where("id").exists(true)
+                .and("date")
+                .gte(startDate)
+                .lte(endDate);
+
+        return operations.find(query, Item.class);
+    }
+
+    public List<Item> findItemsByCategoryIdAndDate(String categoryId, Date startDate, Date endDate) {
+
+        Query query = new Query();
+        Criteria.where("id").exists(true)
+                .and("categoryId")
+                .is(categoryId)
                 .and("date")
                 .gte(startDate)
                 .lte(endDate);

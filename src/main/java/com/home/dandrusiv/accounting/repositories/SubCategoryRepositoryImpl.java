@@ -12,40 +12,59 @@ import java.util.List;
 @Repository
 public class SubCategoryRepositoryImpl implements SubCategoryRepository {
 
+    private final MongoOperations operations;
+
     @Autowired
-    private MongoOperations operations;
+    public SubCategoryRepositoryImpl(MongoOperations operations) {
+
+        this.operations = operations;
+    }
 
     private String SUB_CATEGORY_DOCUMENT = "subCategory";
 
     @Override
-    public SubCategory create(final SubCategory subCategory) {
+    public SubCategory create(SubCategory subCategory) {
+
         return operations.insert(subCategory, SUB_CATEGORY_DOCUMENT);
     }
 
     @Override
     public SubCategory update(SubCategory subCategory) {
+
         return operations.save(subCategory);
     }
 
     @Override
-    public SubCategory getById(final String id) {
-        final Query query = new Query();
+    public SubCategory getById(String id) {
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
         return operations.findOne(query, SubCategory.class);
     }
 
     @Override
-    public List<SubCategory> findByCategoryId(final String categoryId) {
-        final Query query = new Query();
+    public List<SubCategory> findByCategoryId(String categoryId) {
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("categoryId").is(categoryId));
 
         return operations.find(query, SubCategory.class);
     }
 
     @Override
+    public List<SubCategory> findByCategoryIds(List<String> categoryId) {
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("categoryId").in(categoryId));
+
+        return operations.find(query, SubCategory.class);
+    }
+
+    @Override
     public void delete(String id) {
-        final Query query = new Query();
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
         operations.findAndRemove(query, SubCategory.class);

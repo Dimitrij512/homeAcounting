@@ -45,11 +45,7 @@ public class ItemController {
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Item getById(@PathVariable String id) {
-
-        System.out.println("get item by id");
-        Item byId = service.getById(id);
-        System.out.println("Item" + byId.toString());
-        return byId;
+        return service.getById(id);
     }
 
     @GetMapping("/categoryId/{id}")

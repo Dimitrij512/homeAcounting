@@ -11,14 +11,21 @@ import com.home.dandrusiv.accounting.models.Outlay;
 @Repository
 public class OutlayRepositoryImpl implements OutlayRepository {
 
+    final MongoOperations operations;
+
     @Autowired
-    private MongoOperations operations;
+    public OutlayRepositoryImpl(MongoOperations operations) {
+
+        this.operations = operations;
+    }
 
     @Override
-    public Outlay findByAcId(final String acId) {
-        final Query query = new Query();
+    public Outlay findByAcId(String acId) {
+
+        Query query = new Query();
         query.addCriteria(Criteria.where("accountingContextId").is(acId));
 
         return operations.findOne(query, Outlay.class);
     }
+
 }

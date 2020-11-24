@@ -9,6 +9,7 @@ public interface SubCategoryRepository {
     SubCategory update(SubCategory subCategory);
     SubCategory getById(String id);
     List<SubCategory> findByCategoryId(String categoryId);
+    List<SubCategory> findByCategoryIds(List<String> categoryIds);
     void delete(String id);
 
 }

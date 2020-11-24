@@ -2,7 +2,6 @@ package com.home.dandrusiv.accounting.services;
 
 import com.home.dandrusiv.accounting.models.Category;
 import com.home.dandrusiv.accounting.repositories.CategoryRepository;
-import com.home.dandrusiv.accounting.repositories.CategoryRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class CategoryService {
     }
 
     public List<Category> findCategoryByBalanceId(final String id) {
-        return repository.findCategoryByBalanceId(id);
+        return repository.findCategoriesByBalanceId(id);
     }
 
     public void delete(final String id) {
