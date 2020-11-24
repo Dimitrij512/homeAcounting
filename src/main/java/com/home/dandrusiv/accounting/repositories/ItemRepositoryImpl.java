@@ -74,6 +74,19 @@ public class ItemRepositoryImpl implements ItemRepository {
         return operations.find(query, Item.class);
     }
 
+    public List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, Date startDate, Date endDate) {
+
+        Query query = new Query();
+        Criteria.where("id").exists(true)
+                .and("categoryId")
+                .in(categoryIds)
+                .and("date")
+                .gte(startDate)
+                .lte(endDate);
+
+        return operations.find(query, Item.class);
+    }
+
     @Override
     public void delete(String id) {
         Query query = new Query();
