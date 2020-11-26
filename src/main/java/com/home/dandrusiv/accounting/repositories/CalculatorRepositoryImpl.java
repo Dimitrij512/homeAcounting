@@ -16,6 +16,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 @Repository
 public class CalculatorRepositoryImpl implements CalculatorRepository {
     private final String ITEM_DOCUMENT = "item";
+
     private final String SUB_CATEGORY_DOCUMENT = "subCategory";
 
     private MongoOperations operations;
