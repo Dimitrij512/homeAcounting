@@ -23,8 +23,12 @@ import com.home.dandrusiv.accounting.services.SubCategoryService;
 @RequestMapping("subCategory")
 public class SubCategoryController {
 
+    private final SubCategoryService service;
+
     @Autowired
-    private SubCategoryService service;
+    public SubCategoryController(SubCategoryService service) {
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
