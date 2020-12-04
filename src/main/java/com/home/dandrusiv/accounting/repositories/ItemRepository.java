@@ -12,5 +12,6 @@ public interface ItemRepository {
     List<Item> findItemsByCategoryId(String categoryId);
     List<Item> findItemsByDate(Date startDate, Date endDate);
     List<Item> findItemsByCategoryIdAndDate(String categoryId, Date startDate, Date endDate);
+    List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, Date startDate, Date endDate);
     void delete(String id);
 }

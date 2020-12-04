@@ -1,7 +1,9 @@
 package com.home.dandrusiv.accounting.services;
 
+import com.home.dandrusiv.accounting.dto.ItemDto;
 import com.home.dandrusiv.accounting.models.Category;
 import com.home.dandrusiv.accounting.models.Item;
+import com.home.dandrusiv.accounting.models.SubCategory;
 import com.home.dandrusiv.accounting.repositories.CategoryRepository;
 import com.home.dandrusiv.accounting.repositories.ItemRepository;
 import com.home.dandrusiv.accounting.repositories.OutlayRepository;
@@ -10,59 +12,112 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ItemService {
 
-    private final ItemRepository repository;
+    private final ItemRepository itemRepository;
+
     private final OutlayRepository outlayRepository;
+
     private final CategoryRepository categoryRepository;
+
     private final SubCategoryRepository subCategoryRepository;
 
-    public ItemService(ItemRepository repository, OutlayRepository outlayRepository,
+    public ItemService(ItemRepository itemRepository, OutlayRepository outlayRepository,
                        CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository) {
 
-        this.repository = repository;
-        this.outlayRepository= outlayRepository;
+        this.itemRepository = itemRepository;
+        this.outlayRepository = outlayRepository;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
     }
 
-
     public Item create(Item item) {
-        return repository.create(item);
+
+        return itemRepository.create(item);
     }
 
     public Item update(Item item) {
-        return repository.update(item);
+
+        return itemRepository.update(item);
     }
 
     public Item getById(String id) {
-        return repository.getById(id);
+
+        return itemRepository.getById(id);
     }
 
     public List<Item> findItemsByCategoryId(String categoryId) {
-        return repository.findItemsByCategoryId(categoryId);
+
+        return itemRepository.findItemsByCategoryId(categoryId);
     }
 
     public List<Item> findItemsByDate(long epochStartDate, long epochEndDate) {
+
         Date startDate = Date.from(Instant.ofEpochSecond(epochStartDate));
         Date endDate = Date.from(Instant.ofEpochSecond(epochEndDate));
 
-        return repository.findItemsByDate(startDate, endDate);
+        return itemRepository.findItemsByDate(startDate, endDate);
     }
 
-    public List<Item> findOutLayItemsByDate(String balanceId, long epochStartDate, long epochEndDate) {
+    public List<ItemDto> findItemsByBalancedIdAndDate(String balanceId, long epochStartDate, long epochEndDate) {
 
-        List<Category> categoryByBalanceId = categoryRepository.findCategoriesByBalanceId(balanceId);
+        Date startDate = Date.from(Instant.ofEpochSecond(epochStartDate));
+        Date endDate = Date.from(Instant.ofEpochSecond(epochEndDate));
 
-
-        return null;
+        return generateItemsDto(balanceId, startDate, endDate);
     }
 
     public void delete(String id) {
-        repository.delete(id);
+
+        itemRepository.delete(id);
+    }
+
+    private List<ItemDto> generateItemsDto(String balanceId, Date startDate, Date endDate) {
+
+        List<Category> categories = categoryRepository.findCategoriesByBalanceId(balanceId);
+        List<String> categoryIdList = categories.stream()
+                                                .map(Category::getId)
+                                                .collect(Collectors.toList());
+
+        List<SubCategory> subcategories = subCategoryRepository.findByCategoryIds(categoryIdList);
+        List<String> subCategoryIdList = subcategories.stream()
+                                                      .map(SubCategory::getId)
+                                                      .collect(Collectors.toList());
+
+        List<String> idList =
+                Stream.concat(categoryIdList.stream(), subCategoryIdList.stream()).collect(Collectors.toList());
+
+        List<Item> itemsByCategoryIdsAndDate =
+                itemRepository.findItemsByCategoryIdsAndDate(idList, startDate, endDate);
+
+        Map<String, String> mapCategoryIdAndName =
+                categories.stream().collect(Collectors.toMap(Category::getId, Category::getName));
+        Map<String, String> mapSubCategoryIdAndName =
+                subcategories.stream().collect(Collectors.toMap(SubCategory::getId, SubCategory::getName));
+
+        Map<String, String> collectCategoryIdAndName =
+                Stream.concat(mapCategoryIdAndName.entrySet().stream(), mapSubCategoryIdAndName.entrySet().stream())
+                      .collect(
+                              Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return itemsByCategoryIdsAndDate.stream()
+                                        .map(item -> ItemDto.builder()
+                                                            .id(item.getId())
+                                                            .categoryId(item.getCategoryId())
+                                                            .name(item.getName())
+                                                            .date(item.getDate())
+                                                            .value(item.getValue())
+                                                            .categoryName(collectCategoryIdAndName.get(item.getCategoryId()))
+                                                            .build())
+                                        .collect(Collectors.toList());
+
     }
 
 }

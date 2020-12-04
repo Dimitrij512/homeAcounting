@@ -2,6 +2,7 @@ package com.home.dandrusiv.accounting.controllers;
 
 import java.util.List;
 
+import com.home.dandrusiv.accounting.dto.ItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -58,6 +59,19 @@ public class ItemController {
     @ResponseStatus(HttpStatus.OK)
     public List<Item> getByDate(@PathVariable long epochStartDate, @PathVariable long epochEndDate) {
         return service.findItemsByDate (epochStartDate, epochEndDate);
+    }
+
+    @GetMapping("/balancedId/{id}/start/{epochStartDate}/end/{epochEndDate}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemDto> getByBalancedIdAndDate(
+            @PathVariable
+                    String id,
+            @PathVariable
+                    long epochStartDate,
+            @PathVariable
+                    long epochEndDate) {
+
+        return service.findItemsByBalancedIdAndDate(id, epochStartDate, epochEndDate);
     }
 
     @DeleteMapping("/id/{id}")
