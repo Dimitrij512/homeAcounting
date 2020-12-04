@@ -19,6 +19,7 @@ public class UserController {
 
     private final UserRepository repository;
 
+    @Autowired
     public UserController(UserRepository repository) {
         this.repository = repository;
     }
