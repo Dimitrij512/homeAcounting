@@ -10,18 +10,22 @@ import java.util.List;
 @Service
 public class AccountingContextService {
 
-    @Autowired
-    private AccountingContextRepository repository;
+    private final AccountingContextRepository repository;
 
-    public AccountingContext create(final AccountingContext accountingContext) {
+    @Autowired
+    public  AccountingContextService (AccountingContextRepository repository) {
+        this.repository = repository;
+    }
+
+    public AccountingContext create(AccountingContext accountingContext) {
         return repository.create(accountingContext);
     }
 
-    public AccountingContext update(final AccountingContext accountingContext){
+    public AccountingContext update(AccountingContext accountingContext){
         return repository.update(accountingContext);
     }
 
-    public AccountingContext getById(final String id) {
+    public AccountingContext getById(String id) {
         return repository.getById(id);
     }
 
@@ -29,11 +33,11 @@ public class AccountingContextService {
         return repository.findAll();
     }
 
-    public List<AccountingContext> findByUserId(final String id) {
+    public List<AccountingContext> findByUserId(String id) {
         return repository.findByUserId(id);
     }
 
-    public void delete(final String id) {
+    public void delete(String id) {
         repository.delete(id);
     }
 
