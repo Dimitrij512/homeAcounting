@@ -23,41 +23,62 @@ import com.home.dandrusiv.accounting.services.AccountingContextService;
 @RequestMapping("accountingContext")
 public class AccountingContextController {
 
-    @Autowired
     private AccountingContextService service;
+
+    @Autowired
+    public AccountingContextController(AccountingContextService service) {
+
+        this.service = service;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountingContext create(@RequestBody final AccountingContext accountingContext) {
+    public AccountingContext create(
+            @RequestBody
+                    AccountingContext accountingContext) {
+
         return service.create(accountingContext);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public AccountingContext update(@RequestBody final AccountingContext accountingContext) {
+    public AccountingContext update(
+            @RequestBody
+                    AccountingContext accountingContext) {
+
         return service.update(accountingContext);
     }
 
     @GetMapping("/id/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountingContext getById(@PathVariable final String id) {
+    public AccountingContext getById(
+            @PathVariable
+                    String id) {
+
         return service.getById(id);
     }
 
     @GetMapping("/userId/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List<AccountingContext> findByUserId(@PathVariable final String id) {
+    public List<AccountingContext> findByUserId(
+            @PathVariable
+                    String id) {
+
         return service.findByUserId(id);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public  List<AccountingContext> findAll() {
+    public List<AccountingContext> findAll() {
+
         return service.findAll();
     }
 
     @DeleteMapping("/id/{id}")
-    public void delete(@PathVariable final String id) {
+    public void delete(
+            @PathVariable
+                    String id) {
+
         service.delete(id);
     }
 
