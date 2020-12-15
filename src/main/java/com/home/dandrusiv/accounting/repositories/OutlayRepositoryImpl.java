@@ -28,4 +28,8 @@ public class OutlayRepositoryImpl implements OutlayRepository {
         return operations.findOne(query, Outlay.class);
     }
 
+    public Outlay insert(Outlay outlay) {
+        return operations.insert(outlay, "outlay");
+    }
+
 }

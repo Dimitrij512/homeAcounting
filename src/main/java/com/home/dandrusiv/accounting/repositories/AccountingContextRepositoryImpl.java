@@ -20,14 +20,19 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 @Repository
 public class AccountingContextRepositoryImpl implements AccountingContextRepository {
 
-    @Autowired
     private MongoOperations operations;
 
     private String ACCOUNTING_CONTEXT_DOCUMENT = "accountingContext";
 
+    @Autowired
+    public AccountingContextRepositoryImpl(MongoOperations operations) {
+
+        this.operations = operations;
+    }
+
     @Override
-    public AccountingContext create(final AccountingContext accountingContext) {
-        final AccountingContext ac = operations.insert(accountingContext, ACCOUNTING_CONTEXT_DOCUMENT);
+    public AccountingContext create(AccountingContext accountingContext) {
+        AccountingContext ac = operations.save(accountingContext, ACCOUNTING_CONTEXT_DOCUMENT);
 
         Income income = new Income();
         income.setAccountingContextId(ac.getId());
@@ -35,14 +40,17 @@ public class AccountingContextRepositoryImpl implements AccountingContextReposit
         Outlay outlay = new Outlay();
         outlay.setAccountingContextId(ac.getId());
 
-        operations.insert(income,"income");
-        operations.insert(outlay,"outlay");
+        Income createdIncome = operations.insert(income, "income");
+        Outlay cratedOutLay = operations.insert(outlay, "outlay");
 
-        return ac;
+        ac.setIncome(createdIncome);
+        ac.setOutlay(cratedOutLay);
+
+        return operations.save(accountingContext, ACCOUNTING_CONTEXT_DOCUMENT);
     }
 
     @Override
-    public AccountingContext update(final AccountingContext accountingContext) {
+    public AccountingContext update(AccountingContext accountingContext) {
         return operations.save(accountingContext);
     }
 
