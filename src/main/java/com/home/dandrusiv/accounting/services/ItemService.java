@@ -10,6 +10,7 @@ import com.home.dandrusiv.accounting.repositories.OutlayRepository;
 import com.home.dandrusiv.accounting.repositories.SubCategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,8 @@ public class ItemService {
 
     private final SubCategoryRepository subCategoryRepository;
 
+    private final SimpleDateFormat dateFormatter;
+
     public ItemService(ItemRepository itemRepository, OutlayRepository outlayRepository,
                        CategoryRepository categoryRepository, SubCategoryRepository subCategoryRepository) {
 
@@ -36,6 +39,9 @@ public class ItemService {
         this.outlayRepository = outlayRepository;
         this.categoryRepository = categoryRepository;
         this.subCategoryRepository = subCategoryRepository;
+
+        this.dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
     }
 
     public Item create(Item item) {
@@ -112,7 +118,8 @@ public class ItemService {
                                                             .id(item.getId())
                                                             .categoryId(item.getCategoryId())
                                                             .name(item.getName())
-                                                            .date(item.getDate())
+                                                            .comment(item.getComment())
+                                                            .date(dateFormatter.format(item.getDate()))
                                                             .value(item.getValue())
                                                             .categoryName(collectCategoryIdAndName.get(item.getCategoryId()))
                                                             .build())
