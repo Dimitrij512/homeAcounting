@@ -1,14 +1,15 @@
 package com.home.dandrusiv.accounting.repositories;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+
 import com.home.dandrusiv.accounting.models.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
-import java.util.List;
 
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
@@ -26,11 +27,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item create(Item item) {
+        item.setDate(Date.from(Instant.now()));
         return operations.insert(item, ITEM_DOCUMENT);
     }
 
     @Override
     public Item update(Item item) {
+        item.setDate(Date.from(Instant.now()));
         return operations.save(item);
     }
 
