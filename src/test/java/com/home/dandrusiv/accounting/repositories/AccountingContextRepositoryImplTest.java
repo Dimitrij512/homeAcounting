@@ -11,8 +11,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static com.home.dandrusiv.accounting.util.TestUtil.prepareUser;
@@ -22,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @DirtiesContext
 public class AccountingContextRepositoryImplTest {
+
     @Autowired
     private MongoOperations operations;
 
@@ -50,11 +49,13 @@ public class AccountingContextRepositoryImplTest {
 
     @Before
     public void setUp() {
+
         accountingContext = prepareAccountingContext();
     }
 
     @After
     public void tearDown() {
+
         operations.dropCollection("accountingContext");
     }
 
@@ -84,8 +85,8 @@ public class AccountingContextRepositoryImplTest {
         categoryRepository.create(secondOutlayCategory);
 
         // crate subcategories
-        SubCategory firstSubCategory =  prepareSubcategory(firstIncomeCategory.getId(), "One payment");
-        SubCategory firstOutlaySubCategory =  prepareSubcategory(firstOutlayCategory.getId(), "Ще одна підкатегорія");
+        SubCategory firstSubCategory = prepareSubcategory(firstIncomeCategory.getId(), "One payment");
+        SubCategory firstOutlaySubCategory = prepareSubcategory(firstOutlayCategory.getId(), "Ще одна підкатегорія");
 
         subCategoryRepository.create(firstSubCategory);
         subCategoryRepository.create(firstOutlaySubCategory);
@@ -99,10 +100,7 @@ public class AccountingContextRepositoryImplTest {
         itemRepository.create(prepareItem(firstOutlayCategory.getId(), "Хліб", 252500.50));
         itemRepository.create(prepareItem(firstOutlaySubCategory.getId(), "Собака", 33.3));
 
-
         itemRepository.create(prepareItem(secondOutlayCategory.getId(), "Ще щось", 3500.25));
-
-
 
         Date startDate = new Date(2010, 3, 1);
         Date endDate = new Date(2019, 4, 1);
@@ -115,6 +113,7 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private static SubCategory prepareSubcategory(String categoryId, String name) {
+
         SubCategory subCategory = new SubCategory();
         subCategory.setId(UUID.randomUUID().toString());
         subCategory.setCategoryId(categoryId);
@@ -124,9 +123,10 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private static Item prepareItem(String categoryId, String name, double value) {
+
         Item item = new Item();
         item.setId(UUID.randomUUID().toString());
-        item.setDate(new Date(2018, 3, 1));
+        item.setEpochTime(1606600800000000l);
         item.setCategoryId(categoryId);
         item.setName(name);
         item.setValue(value);
@@ -136,6 +136,7 @@ public class AccountingContextRepositoryImplTest {
 
     @Test
     public void create() {
+
         AccountingContext createdAc = repository.create(accountingContext);
 
         assertThat(createdAc).isNotNull();
@@ -149,18 +150,20 @@ public class AccountingContextRepositoryImplTest {
 
     @Test
     public void update() {
+
         AccountingContext createdAc = repository.create(accountingContext);
         createdAc.setName("UpdatedAccounting");
 
         AccountingContext updatedAx = repository.update(createdAc);
 
         assertThat(updatedAx).isNotNull();
-        assertThat(createdAc).isEqualToIgnoringGivenFields(updatedAx,  "name");
+        assertThat(createdAc).isEqualToIgnoringGivenFields(updatedAx, "name");
         assertThat(createdAc).isNotEqualTo(updatedAx.getName());
     }
 
     @Test
     public void getById() {
+
         AccountingContext createdAc = repository.create(accountingContext);
         AccountingContext axById = repository.getById(createdAc.getId());
 
@@ -169,6 +172,7 @@ public class AccountingContextRepositoryImplTest {
 
     @Test
     public void findByUserId() {
+
         User testUser1 = userRepository.create(prepareUser("test@email.com", "Test1Name", "TestLast1Name"));
         User testUser2 = userRepository.create(prepareUser("test@email.com", "Test2Name", "TestLast2Name"));
         accountingContext.setUserIdList(Arrays.asList(testUser1.getId(), testUser2.getId()));
@@ -186,6 +190,7 @@ public class AccountingContextRepositoryImplTest {
 
     @Test
     public void findFewAcByUserId() {
+
         User testUser1 = userRepository.create(prepareUser("test@email.com", "Test1Name", "TestLast1Name"));
 
         accountingContext.setUserIdList(Collections.singletonList(testUser1.getId()));
@@ -205,6 +210,7 @@ public class AccountingContextRepositoryImplTest {
 
     @Test
     public void delete() {
+
         AccountingContext ac = repository.create(prepareAccountingContext());
         assertThat(ac).isNotNull();
 
@@ -218,6 +224,7 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private AccountingContext prepareAccountingContext() {
+
         AccountingContext accountingContext = new AccountingContext();
 
         accountingContext.setId(UUID.randomUUID().toString());
@@ -227,6 +234,7 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private Income prepareIncome(String accountingContextId) {
+
         Income income = new Income();
         income.setId(UUID.randomUUID().toString());
         income.setAccountingContextId(accountingContextId);
@@ -235,6 +243,7 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private Outlay prepareOutLay(String accountingContextId) {
+
         Outlay outlay = new Outlay();
         outlay.setId(UUID.randomUUID().toString());
         outlay.setAccountingContextId(accountingContextId);
@@ -243,6 +252,7 @@ public class AccountingContextRepositoryImplTest {
     }
 
     private List<Category> prepareDefaultCategories(String id) {
+
         Category category = new Category();
         category.setId(UUID.randomUUID().toString());
         category.setBalanceId(id);

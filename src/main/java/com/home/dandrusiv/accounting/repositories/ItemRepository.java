@@ -11,7 +11,7 @@ public interface ItemRepository {
     Item getById(String id);
     List<Item> findItemsByCategoryId(String categoryId);
     List<Item> findItemsByDate(Date startDate, Date endDate);
-    List<Item> findItemsByCategoryIdAndDate(String categoryId, Date startDate, Date endDate);
-    List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, Date startDate, Date endDate);
+    List<Item> findItemsByCategoryIdAndDate(String categoryId, long epochStartDate, long epochEndDate);
+    List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, long epochStartDate, long epochEndDate);
     void delete(String id);
 }

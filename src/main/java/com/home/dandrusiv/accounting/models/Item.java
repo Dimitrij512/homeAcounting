@@ -15,5 +15,5 @@ public class Item {
     String name;
     double value;
     String comment;
-    Date date;
+    long epochTime;
 }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,10 +73,7 @@ public class ItemService {
 
     public List<ItemDto> findItemsByBalancedIdAndDate(String balanceId, long epochStartDate, long epochEndDate) {
 
-        Date startDate = Date.from(Instant.ofEpochSecond(epochStartDate));
-        Date endDate = Date.from(Instant.ofEpochSecond(epochEndDate));
-
-        return generateItemsDto(balanceId, startDate, endDate);
+        return generateItemsDto(balanceId, epochStartDate, epochEndDate);
     }
 
     public void delete(String id) {
@@ -85,7 +81,7 @@ public class ItemService {
         itemRepository.delete(id);
     }
 
-    private List<ItemDto> generateItemsDto(String balanceId, Date startDate, Date endDate) {
+    private List<ItemDto> generateItemsDto(String balanceId, long epochStartDate, long epochEndDate) {
 
         List<Category> categories = categoryRepository.findCategoriesByBalanceId(balanceId);
         List<String> categoryIdList = categories.stream()
@@ -101,7 +97,7 @@ public class ItemService {
                 Stream.concat(categoryIdList.stream(), subCategoryIdList.stream()).collect(Collectors.toList());
 
         List<Item> itemsByCategoryIdsAndDate =
-                itemRepository.findItemsByCategoryIdsAndDate(idList, startDate, endDate);
+                itemRepository.findItemsByCategoryIdsAndDate(idList, epochStartDate, epochEndDate);
 
         Map<String, String> mapCategoryIdAndName =
                 categories.stream().collect(Collectors.toMap(Category::getId, Category::getName));
@@ -119,7 +115,7 @@ public class ItemService {
                                                             .categoryId(item.getCategoryId())
                                                             .name(item.getName())
                                                             .comment(item.getComment())
-                                                            .date(dateFormatter.format(item.getDate()))
+                                                            .date(dateFormatter.format(new Date(item.getEpochTime())))
                                                             .value(item.getValue())
                                                             .categoryName(collectCategoryIdAndName.get(item.getCategoryId()))
                                                             .build())

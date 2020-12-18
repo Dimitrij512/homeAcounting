@@ -24,21 +24,23 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     private String ITEM_DOCUMENT = "item";
 
-
     @Override
     public Item create(Item item) {
-        item.setDate(Date.from(Instant.now()));
+
+        item.setEpochTime(Instant.now().toEpochMilli());
         return operations.insert(item, ITEM_DOCUMENT);
     }
 
     @Override
     public Item update(Item item) {
-        item.setDate(Date.from(Instant.now()));
+
+        item.setEpochTime(Instant.now().toEpochMilli());
         return operations.save(item);
     }
 
     @Override
     public Item getById(String id) {
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
@@ -47,6 +49,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findItemsByCategoryId(String categoryId) {
+
         Query query = new Query();
         query.addCriteria(Criteria.where("categoryId").is(categoryId));
 
@@ -55,6 +58,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public List<Item> findItemsByDate(Date startDate, Date endDate) {
+
         Query query = new Query();
         Criteria.where("id").exists(true)
                 .and("date")
@@ -64,34 +68,35 @@ public class ItemRepositoryImpl implements ItemRepository {
         return operations.find(query, Item.class);
     }
 
-    public List<Item> findItemsByCategoryIdAndDate(String categoryId, Date startDate, Date endDate) {
+    public List<Item> findItemsByCategoryIdAndDate(String categoryId, long epochStartDate, long epochEndDate) {
 
         Query query = new Query();
-        Criteria.where("id").exists(true)
-                .and("categoryId")
-                .is(categoryId)
-                .and("date")
-                .gte(startDate)
-                .lte(endDate);
+        query.addCriteria(Criteria.where("id").exists(true)
+                                  .and("categoryId")
+                                  .is(categoryId)
+                                  .and("date")
+                                  .gte(epochStartDate)
+                                  .lte(epochEndDate));
 
         return operations.find(query, Item.class);
     }
 
-    public List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, Date startDate, Date endDate) {
+    public List<Item> findItemsByCategoryIdsAndDate(List<String> categoryIds, long epochStartDate, long epochEndDate) {
 
         Query query = new Query();
-        Criteria.where("id").exists(true)
-                .and("categoryId")
-                .in(categoryIds)
-                .and("date")
-                .gte(startDate)
-                .lte(endDate);
+        query.addCriteria(Criteria.where("id").exists(true)
+                                  .and("categoryId")
+                                  .in(categoryIds)
+                                  .and("epochTime")
+                                  .gte(epochStartDate)
+                                  .lte(epochEndDate));
 
         return operations.find(query, Item.class);
     }
 
     @Override
     public void delete(String id) {
+
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
 
