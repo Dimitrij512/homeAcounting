@@ -20,7 +20,7 @@ import com.home.dandrusiv.accounting.models.Item;
 import com.home.dandrusiv.accounting.services.ItemService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("item")
 public class ItemController {
 

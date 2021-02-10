@@ -19,7 +19,6 @@ import com.home.dandrusiv.accounting.models.AccountingContext;
 import com.home.dandrusiv.accounting.services.AccountingContextService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("accountingContext")
 public class AccountingContextController {
 

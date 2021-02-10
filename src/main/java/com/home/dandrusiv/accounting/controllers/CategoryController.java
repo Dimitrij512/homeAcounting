@@ -19,7 +19,6 @@ import com.home.dandrusiv.accounting.models.Category;
 import com.home.dandrusiv.accounting.services.CategoryService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("category")
 public class CategoryController {
 
